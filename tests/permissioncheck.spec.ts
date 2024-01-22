@@ -42,7 +42,7 @@ test.describe("Permission Check", () => {
       ).toBeVisible();
     }
   });
-  test.only(`Should not be able to create new workspace with reader only permission`, async ({
+  test(`Should not be able to create new workspace with reader only permission`, async ({
     page,
   }) => {
     if (reader_username && read_directory_name) {
