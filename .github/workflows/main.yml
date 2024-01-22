@@ -13,8 +13,7 @@ jobs:
             - name: Install playwright browsers
               run: npx playwright install --with-deps
             - name: Run tests
-              run: npx playwright test --timeout=90000 --workers=1
-            - name: Download a single artifact
-               uses: actions/download-artifact@v4
+              run: npx playwright test --timeout=90000 --workers=1        
+             -uses: actions/download-artifact@v4
                 with:
                  name: dashboardtest-artifact
