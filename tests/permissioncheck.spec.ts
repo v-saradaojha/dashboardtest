@@ -65,7 +65,7 @@ test.describe("Permission Check", () => {
     ).toBeVisible();
   });
 
-  test.only(`Should not show delete workspace option to reader on workspace`, async ({
+  test(`Should not show delete workspace option to reader on workspace`, async ({
     page,
   }) => {
     await expect(page.locator(`#${read_workspace}`)).not.toBeVisible();
