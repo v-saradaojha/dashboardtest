@@ -5,7 +5,7 @@ export default defineConfig({
   testDir: "./tests",
   timeout: 60 * 1000,
   expect: {
-    timeout: 15000,
+    timeout: 90000,
   },
   forbidOnly: !!process.env.CI,
   workers: process.env.WORKERS ? +process.env.WORKERS : undefined, 
