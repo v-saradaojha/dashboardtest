@@ -3,16 +3,18 @@ import * as dotenv from "dotenv";
 import { en } from "../helpers/userLiterals";
 dotenv.config();
 
+const reader_username = process.env.READER_USERNAME?.toString()!;
+const reader_userrole = process.env.READER_USER_NAME?.toString()!;
+const directory_name = process.env.DIRECTORY_NAME?.toString();
+const read_directory_name = process.env.READ_DIRECTORY_NAME?.toString();
+const base_address = process.env.BASE_ADDRESS?.toString();
+const reader_password = process.env.READER_PASSWORD?.toString()!;
+const read_workspace = process.env.READ_WORKSPACE_NAME?.toString();
+const write_workspace = process.env.WRITE_WORKSPACE_NAME?.toString();
+test.describe.configure({
+  mode: "parallel",
+});
 test.describe("Permission Check", () => {
-  const reader_username = process.env.READER_USERNAME?.toString()!;
-  const reader_userrole = process.env.READER_USER_NAME?.toString()!;
-  const directory_name = process.env.DIRECTORY_NAME?.toString();
-  const read_directory_name = process.env.READ_DIRECTORY_NAME?.toString();
-  const base_address = process.env.BASE_ADDRESS?.toString();
-  const reader_password = process.env.READER_PASSWORD?.toString()!;
-  const read_workspace = process.env.READ_WORKSPACE_NAME?.toString();
-  const write_workspace = process.env.WRITE_WORKSPACE_NAME?.toString();
-
   test.beforeEach(async ({ page }) => {
     await page.goto(`${base_address}`);
     await page.click(`button:has-text("${en.SIGN_IN}")`);
@@ -28,7 +30,7 @@ test.describe("Permission Check", () => {
       page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`, {
         exact: true,
       })
-    ).toBeVisible();    
+    ).toBeVisible();
   });
   test(`Should not be able to create new workspace with reader only permission`, async ({
     page,
@@ -153,7 +155,9 @@ test.describe("Permission Check", () => {
       await page.getByText(`${read_workspace}`, { exact: true }).click();
       await page.locator("#account-settings-button").click();
       await expect(
-        page.getByText(en.LIMITED_PERMISSION_DESCRIPTION, { exact: true })
+        page.getByText(`${en.LIMITED_PERMISSION_DESCRIPTION.toString()}`, {
+          exact: true,
+        })
       ).toBeVisible();
     }
   });

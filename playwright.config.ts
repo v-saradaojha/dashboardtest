@@ -2,17 +2,17 @@ import { defineConfig } from "@playwright/test";
 require("dotenv").config();
 
 export default defineConfig({
-  testDir: "./tests",
-  globalTimeout: 60 * 60 * 1000,
-  timeout: 60 * 1000,
+  testDir: "./tests", 
+  timeout:60 * 60 * 1000,
   expect: {
     timeout: 180000,
   },
-  use: {
+  /*use: {
     actionTimeout: 900 * 1000,
     navigationTimeout: 900 * 1000,
-  },
+  },*/
   forbidOnly: !!process.env.CI,
+  retries:2,
   workers: process.env.WORKERS ? +process.env.WORKERS : undefined,
   projects: [
     {
