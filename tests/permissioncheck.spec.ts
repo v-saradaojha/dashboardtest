@@ -30,7 +30,7 @@ test.describe("Permission Check", () => {
     ).toBeVisible();
   });
   test(`Should not be able to create new workspace with reader only permission`, async ({
-    page,
+    page
   }) => {
     if (reader_username && read_directory_name) {
       await page.getByRole("img", { name: reader_userrole }).click();
