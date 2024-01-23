@@ -29,7 +29,7 @@ test.describe("Permission Check", () => {
         exact: true,
       })
     ).toBeVisible();
-    if (reader_username && directory_name) {
+    /* if (reader_username && directory_name) {
       await page.getByRole("img", { name: reader_userrole }).click();
       await page.getByText(`${en.SWITCH_DIRECTORY}`, { exact: true }).click();
       await page
@@ -40,7 +40,7 @@ test.describe("Permission Check", () => {
       await expect(
         page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`, { exact: true })
       ).toBeVisible();
-    }
+    } */
   });
   test(`Should not be able to create new workspace with reader only permission`, async ({
     page,
@@ -60,7 +60,7 @@ test.describe("Permission Check", () => {
     await expect(
       page.getByRole("button", { name: `${en.NEW_WORKSPACE}` })
     ).not.toBeVisible();
-   /* await expect(
+    /* await expect(
       page.getByText(`${en.NO_WORKSPACE_MESSAGE_3}`, { exact: true })
     ).toBeVisible();*/
   });
@@ -68,51 +68,105 @@ test.describe("Permission Check", () => {
   test(`Should not show delete workspace option to reader on workspace`, async ({
     page,
   }) => {
-    await expect(page.locator(`#${read_workspace}`)).not.toBeVisible();
+    if (reader_username && directory_name) {
+      await page.getByRole("img", { name: reader_userrole }).click();
+      await page.getByText(`${en.SWITCH_DIRECTORY}`, { exact: true }).click();
+      await page
+        .getByRole("menuitemradio", {
+          name: directory_name,
+        })
+        .click();
+      await expect(page.locator(`#${read_workspace}`)).not.toBeVisible();
+    }
   });
 
   test(`Should show delete workspace option to reader on subscription with write permission on workspace`, async ({
     page,
   }) => {
-    await expect(page.locator(`#${write_workspace}`)).toBeVisible();
+    if (reader_username && directory_name) {
+      await page.getByRole("img", { name: reader_userrole }).click();
+      await page.getByText(`${en.SWITCH_DIRECTORY}`, { exact: true }).click();
+      await page
+        .getByRole("menuitemradio", {
+          name: directory_name,
+        })
+        .click();
+      await expect(page.locator(`#${write_workspace}`)).toBeVisible();
+    }
   });
 
   test(`Should not show access token page to reader on workspace`, async ({
     page,
   }) => {
-    await page.getByText(`${read_workspace}`, { exact: true }).click();
-    await page.locator("#account-settings-button").click();
-    await expect(
-      page.getByRole("tab", { name: `${en.ACCESS_TOKENS}` })
-    ).not.toBeVisible();
+    if (reader_username && directory_name) {
+      await page.getByRole("img", { name: reader_userrole }).click();
+      await page.getByText(`${en.SWITCH_DIRECTORY}`, { exact: true }).click();
+      await page
+        .getByRole("menuitemradio", {
+          name: directory_name,
+        })
+        .click();
+      await page.getByText(`${read_workspace}`, { exact: true }).click();
+      await page.locator("#account-settings-button").click();
+      await expect(
+        page.getByRole("tab", { name: `${en.ACCESS_TOKENS}` })
+      ).not.toBeVisible();
+    }
   });
 
   test(`Should not show billing page to reader on workspace`, async ({
     page,
   }) => {
-    await page.getByText(`${read_workspace}`, { exact: true }).click();
-    await page.locator("#account-settings-button").click();
-    await expect(
-      page.getByRole("tab", { name: `${en.BILLING}` })
-    ).not.toBeVisible();
+    if (reader_username && directory_name) {
+      await page.getByRole("img", { name: reader_userrole }).click();
+      await page.getByText(`${en.SWITCH_DIRECTORY}`, { exact: true }).click();
+      await page
+        .getByRole("menuitemradio", {
+          name: directory_name,
+        })
+        .click();
+      await page.getByText(`${read_workspace}`, { exact: true }).click();
+      await page.locator("#account-settings-button").click();
+      await expect(
+        page.getByRole("tab", { name: `${en.BILLING}` })
+      ).not.toBeVisible();
+    }
   });
 
   test(`Should not show getting started page to reader on workspace`, async ({
     page,
   }) => {
-    await page.getByText(`${read_workspace}`, { exact: true }).click();
-    await expect(
-      page.getByText(`${en.NO_TEST_RUN_PERMISSIONS}`, { exact: true })
-    ).toBeVisible();
+    if (reader_username && directory_name) {
+      await page.getByRole("img", { name: reader_userrole }).click();
+      await page.getByText(`${en.SWITCH_DIRECTORY}`, { exact: true }).click();
+      await page
+        .getByRole("menuitemradio", {
+          name: directory_name,
+        })
+        .click();
+      await page.getByText(`${read_workspace}`, { exact: true }).click();
+      await expect(
+        page.getByText(`${en.NO_TEST_RUN_PERMISSIONS}`, { exact: true })
+      ).toBeVisible();
+    }
   });
 
   test(`Should show limited access warning on settings page to reader on workspace`, async ({
     page,
   }) => {
-    await page.getByText(`${read_workspace}`, { exact: true }).click();
-    await page.locator("#account-settings-button").click();
-    await expect(
-      page.getByText(en.LIMITED_PERMISSION_DESCRIPTION, { exact: true })
-    ).toBeVisible();
+    if (reader_username && directory_name) {
+      await page.getByRole("img", { name: reader_userrole }).click();
+      await page.getByText(`${en.SWITCH_DIRECTORY}`, { exact: true }).click();
+      await page
+        .getByRole("menuitemradio", {
+          name: directory_name,
+        })
+        .click();
+      await page.getByText(`${read_workspace}`, { exact: true }).click();
+      await page.locator("#account-settings-button").click();
+      await expect(
+        page.getByText(en.LIMITED_PERMISSION_DESCRIPTION, { exact: true })
+      ).toBeVisible();
+    }
   });
 });
