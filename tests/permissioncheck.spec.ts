@@ -11,9 +11,6 @@ const base_address = process.env.BASE_ADDRESS?.toString();
 const reader_password = process.env.READER_PASSWORD?.toString()!;
 const read_workspace = process.env.READ_WORKSPACE_NAME?.toString();
 const write_workspace = process.env.WRITE_WORKSPACE_NAME?.toString();
-test.describe.configure({
-  mode: "parallel",
-});
 test.describe("Permission Check", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(`${base_address}`);
