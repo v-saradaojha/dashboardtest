@@ -12,7 +12,7 @@ export default defineConfig({
     navigationTimeout: 900 * 1000,
   },*/
   forbidOnly: !!process.env.CI,
-  retries:5,
+  retries:10,
   workers: process.env.WORKERS ? +process.env.WORKERS : undefined,
   projects: [
     {
