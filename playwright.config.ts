@@ -29,6 +29,7 @@ export default defineConfig({
         browserName: "chromium",
         viewport: { width: 1280, height: 720 },
         ignoreHTTPSErrors: true,
+        video:'retain-on-failure'
         /*launchOptions: {
           logger: {
             isEnabled: (name, severity) => true,
