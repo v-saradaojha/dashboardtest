@@ -3,9 +3,9 @@ require("dotenv").config();
 
 export default defineConfig({
   testDir: "./tests", 
-  timeout:60 * 60 * 1000,
+  timeout: 60 * 1000,
   expect: {
-    timeout: 180000,
+    timeout: 15000,
   },
   /*use: {
     actionTimeout: 900 * 1000,
