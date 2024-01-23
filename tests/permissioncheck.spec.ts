@@ -28,19 +28,7 @@ test.describe("Permission Check", () => {
       page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`, {
         exact: true,
       })
-    ).toBeVisible();
-    /* if (reader_username && directory_name) {
-      await page.getByRole("img", { name: reader_userrole }).click();
-      await page.getByText(`${en.SWITCH_DIRECTORY}`, { exact: true }).click();
-      await page
-        .getByRole("menuitemradio", {
-          name: directory_name,
-        })
-        .click();
-      await expect(
-        page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`, { exact: true })
-      ).toBeVisible();
-    } */
+    ).toBeVisible();    
   });
   test(`Should not be able to create new workspace with reader only permission`, async ({
     page,
