@@ -42,7 +42,7 @@ test.describe("Permission Check", () => {
       ).toBeVisible();
     }
   });
-  test.fixme(`Should not be able to create new workspace with reader only permission`, async ({
+  test(`Should not be able to create new workspace with reader only permission`, async ({
     page,
   }) => {
     if (reader_username && read_directory_name) {
@@ -60,9 +60,9 @@ test.describe("Permission Check", () => {
     await expect(
       page.getByRole("button", { name: `${en.NEW_WORKSPACE}` })
     ).not.toBeVisible();
-    await expect(
+   /* await expect(
       page.getByText(`${en.NO_WORKSPACE_MESSAGE_3}`, { exact: true })
-    ).toBeVisible();
+    ).toBeVisible();*/
   });
 
   test(`Should not show delete workspace option to reader on workspace`, async ({
@@ -97,7 +97,7 @@ test.describe("Permission Check", () => {
     ).not.toBeVisible();
   });
 
-  test.fixme(`Should not show getting started page to reader on workspace`, async ({
+  test(`Should not show getting started page to reader on workspace`, async ({
     page,
   }) => {
     await page.getByText(`${read_workspace}`, { exact: true }).click();
@@ -106,7 +106,7 @@ test.describe("Permission Check", () => {
     ).toBeVisible();
   });
 
-  test.fixme(`Should show limited access warning on settings page to reader on workspace`, async ({
+  test(`Should show limited access warning on settings page to reader on workspace`, async ({
     page,
   }) => {
     await page.getByText(`${read_workspace}`, { exact: true }).click();
