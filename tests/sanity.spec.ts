@@ -132,6 +132,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to display access tokens page`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
+    console.log("WORKSPACE NAME : " + workspaceName);
     //const workspaceName = process.env.WORKSPACE_NAME;
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
@@ -149,6 +150,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to create new access token`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
+    console.log("WORKSPACE NAME : " + workspaceName);
     //const workspaceName = process.env.WORKSPACE_NAME;
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
@@ -182,7 +184,7 @@ test.describe("Sanity", () => {
     const expiryAt = validity.toISOString();
     const expiryDay = getDateFromIsoString(expiryAt);
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName = process.env.WORKSPACE_NAME;
+    console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -213,7 +215,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to disable regional affinity`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    //const workspaceName = process.env.WORKSPACE_NAME;
+    console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -245,7 +247,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to enable regional affinity`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    //const workspaceName = process.env.WORKSPACE_NAME;
+    console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -281,7 +283,7 @@ test.describe("Sanity", () => {
     page,
   }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    //const workspaceName = process.env.WORKSPACE_NAME;
+    console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -308,7 +310,7 @@ test.describe("Sanity", () => {
   });
   test(`Should be able to delete workspace`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-
+    console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName) {
       await page.getByRole("combobox").click();
       await page
