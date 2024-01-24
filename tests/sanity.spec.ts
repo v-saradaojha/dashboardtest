@@ -104,7 +104,7 @@ test.describe("Sanity", () => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
     var browser = page.context().browser()?.browserType().name();
     workspaceName = workspaceName + browser + environment + rndInt;
-    console.log(workspaceName);
+    console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName) {
       await page.getByRole("combobox").click();
       await page
@@ -128,35 +128,11 @@ test.describe("Sanity", () => {
       ).not.toBeVisible();
       await expect(page.getByText(`${en.REGION_INFO}`)).not.toBeVisible();
     }
-  });
-  test(`Should be able to delete workspace`, async ({ page }) => {
-    const subscriptionName = process.env.SUBSCRIPTION_NAME;
-
-    if (subscriptionName) {
-      await page.getByRole("combobox").click();
-      await page
-        .getByRole("option", { name: subscriptionName })
-        .getByText(subscriptionName)
-        .click();
-      await page.locator(`#${workspaceName}`).click();
-      await page
-        .getByRole("menuitem", { name: `${en.DELETE_WORKSPACE}` })
-        .getByText(`${en.DELETE_WORKSPACE}`)
-        .click();
-      await page
-        .getByRole("button", { name: `${en.DELETE}`, exact: true })
-        .click();
-      await page.locator("#finalDeleteWsButton").click();
-      await expect(
-        page.getByText(`${en.WORKSPACE_DELETING_MESSAGE}`)
-      ).toBeVisible();
-    }
-    workspaceName = "";
-  });
+  }); 
 
   test(`Should be able to display access tokens page`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName = process.env.WORKSPACE_NAME;
+    //const workspaceName = process.env.WORKSPACE_NAME;
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -173,7 +149,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to create new access token`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName = process.env.WORKSPACE_NAME;
+    //const workspaceName = process.env.WORKSPACE_NAME;
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -237,7 +213,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to disable regional affinity`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName = process.env.WORKSPACE_NAME;
+    //const workspaceName = process.env.WORKSPACE_NAME;
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -269,7 +245,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to enable regional affinity`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName = process.env.WORKSPACE_NAME;
+    //const workspaceName = process.env.WORKSPACE_NAME;
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -305,7 +281,7 @@ test.describe("Sanity", () => {
     page,
   }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName = process.env.WORKSPACE_NAME;
+    //const workspaceName = process.env.WORKSPACE_NAME;
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -329,6 +305,30 @@ test.describe("Sanity", () => {
         page2.getByText(`${en.MY_ACCESS}`, { exact: true })
       ).toBeVisible();
     }
+  });
+  test(`Should be able to delete workspace`, async ({ page }) => {
+    const subscriptionName = process.env.SUBSCRIPTION_NAME;
+
+    if (subscriptionName) {
+      await page.getByRole("combobox").click();
+      await page
+        .getByRole("option", { name: subscriptionName })
+        .getByText(subscriptionName)
+        .click();
+      await page.locator(`#${workspaceName}`).click();
+      await page
+        .getByRole("menuitem", { name: `${en.DELETE_WORKSPACE}` })
+        .getByText(`${en.DELETE_WORKSPACE}`)
+        .click();
+      await page
+        .getByRole("button", { name: `${en.DELETE}`, exact: true })
+        .click();
+      await page.locator("#finalDeleteWsButton").click();
+      await expect(
+        page.getByText(`${en.WORKSPACE_DELETING_MESSAGE}`)
+      ).toBeVisible();
+    }
+    workspaceName = "";
   });
   test(`Should be able to logout successfully`, async ({ page }) => {
     const user_name = process.env.USER_NAME;
