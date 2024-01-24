@@ -30,9 +30,10 @@ export default defineConfig({
         viewport: { width: 1280, height: 720 },
         ignoreHTTPSErrors: true,
         video: "retain-on-failure",
-        launchOptions: {
+        navigationTimeout:30*1000,
+       /*launchOptions: {
           slowMo: 3000,
-        },
+        },*/
         /*launchOptions: {
           logger: {
             isEnabled: (name, severity) => true,
