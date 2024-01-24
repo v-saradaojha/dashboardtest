@@ -31,7 +31,7 @@ export default defineConfig({
         ignoreHTTPSErrors: true,
         video: "retain-on-failure",
         launchOptions: {
-          slowMo: 2000,
+          slowMo: 3000,
         },
         /*launchOptions: {
           logger: {
