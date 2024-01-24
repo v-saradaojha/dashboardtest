@@ -43,13 +43,11 @@ test.describe("Sanity", () => {
     if (user_name && directory_name) {
       await page.getByRole("img", { name: user_name }).click();
       await page.getByText(`${en.SWITCH_DIRECTORY}`).click();
-      const page1Promise = page.waitForEvent("popup");
       await page
         .getByRole("menuitemradio", {
           name: directory_name,
         })
         .click();
-      const page1 = await page1Promise;
       await expect(
         page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`)
       ).toBeVisible();
@@ -87,17 +85,15 @@ test.describe("Sanity", () => {
     if (user_name && switch_directory_name) {
       await page.getByRole("img", { name: user_name }).click();
       await page.getByText(`${en.SWITCH_DIRECTORY}`).click();
-      const page1Promise = page.waitForEvent("popup");
       await page
         .getByRole("menuitemradio", {
           name: switch_directory_name,
         })
         .click();
-      const page1 = await page1Promise;
       await expect(
         page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`)
       ).toBeVisible();
-      await page.close();
+     
     }
   });
 
@@ -131,23 +127,8 @@ test.describe("Sanity", () => {
       await expect(
         page.getByText(`${en.CREATING_WORKSPACE_STEP}`)
       ).not.toBeVisible();
-      await expect(page.getByText(`${en.REGION_INFO}`)).not.toBeVisible();
-      await page.close();
-    }
-  });
-
-  test(`Should be able to logout successfully`, async ({ page }) => {
-    const user_name = process.env.USER_NAME;
-    if (user_name) {
-      await page.getByRole("img", { name: user_name }).click();
-      await page.getByRole("menuitem", { name: `${en.SIGN_OUT}` }).click();
-      await expect(
-        await page.getByText(`${en.SCALABLE_E2E_TESTING}`, {
-          exact: true,
-        })
-      ).toBeVisible();
-      await page.close();
-    }
+      await expect(page.getByText(`${en.REGION_INFO}`)).not.toBeVisible();      
+    }    
   });
 
   test(`Should be able to display access tokens page`, async ({ page }) => {
@@ -162,9 +143,8 @@ test.describe("Sanity", () => {
       await page.getByText(workspaceName).click();
       await page.locator("#account-settings-button").click();
       await expect(
-        await page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
-      ).toBeVisible();
-      await page.close();
+        page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
+      ).toBeVisible();      
     }
   });
 
@@ -180,7 +160,7 @@ test.describe("Sanity", () => {
       await page.getByText(workspaceName).click();
       await page.locator("#account-settings-button").click();
       await expect(
-        await page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
+        page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
       ).toBeVisible();
       await page
         .getByRole("button", { name: `${en.GENERATE_NEW_TOKEN}` })
@@ -192,9 +172,8 @@ test.describe("Sanity", () => {
       await page.getByRole("option", { name: "7 days" }).click();
       await page.getByRole("button", { name: `${en.GENERATE_TOKEN}` }).click();
       await expect(
-        await page.getByText(`${en.VALUE_WILL_NOT_BE_SHOWN_AGAIN_1}`)
-      ).toBeVisible();
-      await page.close();
+        page.getByText(`${en.VALUE_WILL_NOT_BE_SHOWN_AGAIN_1}`)
+      ).toBeVisible();      
     }
   });
 
@@ -214,7 +193,7 @@ test.describe("Sanity", () => {
       await page.getByText(workspaceName).click();
       await page.locator("#account-settings-button").click();
       await expect(
-        await page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
+        page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
       ).toBeVisible();
       await page
         .getByRole("row", { name: `test ACTIVE ${expiryDay} Delete` })
@@ -230,7 +209,7 @@ test.describe("Sanity", () => {
         .getByRole("button", { name: `${en.DELETE}` })
         .click();
       await page.getByRole("button", { name: `${en.OK}`, exact: true }).click();
-      await page.close();
+      
     }
   });
 
@@ -246,7 +225,7 @@ test.describe("Sanity", () => {
       await page.getByText(workspaceName).click();
       await page.locator("#account-settings-button").click();
       await expect(
-        await page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
+        page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
       ).toBeVisible();
       await page.getByRole("tab", { name: `${en.GENERAL}` }).click();
       await expect(
@@ -263,7 +242,7 @@ test.describe("Sanity", () => {
           "Tests always connect to browsers in the workspace region"
         )
       ).toBeChecked();
-      await page.close();
+      
     }
   });
 
@@ -279,7 +258,7 @@ test.describe("Sanity", () => {
       await page.getByText(workspaceName).click();
       await page.locator("#account-settings-button").click();
       await expect(
-        await page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
+        page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
       ).toBeVisible();
       await page.getByRole("tab", { name: `${en.GENERAL}` }).click();
       await expect(
@@ -298,7 +277,7 @@ test.describe("Sanity", () => {
           "Tests connect to browsers in the Azure region closest to you to minimize latency. Test results are collected in the execution region, then transferred and stored in the workspace region"
         )
       ).toBeChecked();
-      await page.close();
+      
     }
   });
 
@@ -316,7 +295,7 @@ test.describe("Sanity", () => {
       await page.getByText(workspaceName).click();
       await page.locator("#account-settings-button").click();
       await expect(
-        await page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
+        page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
       ).toBeVisible();
       await page.getByRole("tab", { name: `${en.USERS}` }).click();
       const page2Promise = page.waitForEvent("popup");
@@ -328,8 +307,7 @@ test.describe("Sanity", () => {
       const page2 = await page2Promise;
       await expect(
         page2.getByText(`${en.MY_ACCESS}`, { exact: true })
-      ).toBeVisible();
-      await page.close();
+      ).toBeVisible();      
     }
   });
 
@@ -358,8 +336,19 @@ test.describe("Sanity", () => {
       await page.locator("#finalDeleteWsButton").click();
       await expect(
         page.getByText(`${en.WORKSPACE_DELETING_MESSAGE}`)
-      ).toBeVisible();
-      await page.close();
+      ).toBeVisible();      
+    }
+  });
+  test(`Should be able to logout successfully`, async ({ page }) => {
+    const user_name = process.env.USER_NAME;
+    if (user_name) {
+      await page.getByRole("img", { name: user_name }).click();
+      await page.getByRole("menuitem", { name: `${en.SIGN_OUT}` }).click();
+      await expect(
+        page.getByText(`${en.SCALABLE_E2E_TESTING}`, {
+          exact: true,
+        })
+      ).toBeVisible();      
     }
   });
 });

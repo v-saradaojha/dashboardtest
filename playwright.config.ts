@@ -2,7 +2,7 @@ import { defineConfig } from "@playwright/test";
 require("dotenv").config();
 
 export default defineConfig({
-  testDir: "./tests", 
+  testDir: "./tests",
   timeout: 60 * 1000,
   expect: {
     timeout: 15000,
@@ -12,7 +12,7 @@ export default defineConfig({
     navigationTimeout: 900 * 1000,
   },*/
   forbidOnly: !!process.env.CI,
-  retries:10,
+  retries: 10,
   workers: process.env.WORKERS ? +process.env.WORKERS : undefined,
   projects: [
     {
@@ -29,7 +29,10 @@ export default defineConfig({
         browserName: "chromium",
         viewport: { width: 1280, height: 720 },
         ignoreHTTPSErrors: true,
-        video:'retain-on-failure'
+        video: "retain-on-failure",
+        launchOptions: {
+          slowMo: 1000,
+        },
         /*launchOptions: {
           logger: {
             isEnabled: (name, severity) => true,
