@@ -9,6 +9,7 @@ var regionObj = {
   name: process.env.PRIMARY_REGION,
   id: process.env.PRIMARY_REGION?.replace(/\s/g, "").toLocaleLowerCase(),
 };
+let myWorkspaceName:string;
 test.describe("Sanity", () => {
   test.beforeEach(async ({ page }) => {
     const user_name = process.env.USER_NAME;
@@ -50,7 +51,8 @@ test.describe("Sanity", () => {
         page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`)
       ).toBeVisible();
     }
-  });  
+    myWorkspaceName = myWorkspaceName;
+  });
   test(`Should be able to access global menu after login`, async ({ page }) => {
     await page.locator("#global-menu-toggle").click();
     const page3Promise = page.waitForEvent("popup");
@@ -93,17 +95,17 @@ test.describe("Sanity", () => {
     }
   });
 
-  test(`Should be able to create new workspace`, async ({ page }) => {
+  test(`Should be able to create new workspace`, async ({ page, context }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-     let workspaceName =
+    let workspaceName =
       process.env.WORKSPACE_NAME_PREFIX !== undefined
         ? process.env.WORKSPACE_NAME_PREFIX
         : "dummy";
     var browser = page.context().browser()?.browserType().name();
     var environment = process.env.ENVIRONMENT || "";
-    let rndInt = Math.floor(Math.random() * 10000) + 1;   
-    workspaceName=workspaceName + browser + environment + rndInt;   
-    globalThis.myWorkspaceName= workspaceName;
+    let rndInt = Math.floor(Math.random() * 10000) + 1;
+    workspaceName = workspaceName + browser + environment + rndInt;
+    myWorkspaceName = workspaceName;
     console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName) {
       await page.getByRole("combobox").click();
@@ -131,7 +133,7 @@ test.describe("Sanity", () => {
   });
   test(`Should be able to delete workspace`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName = globalThis.myWorkspaceName;
+    const workspaceName = myWorkspaceName;
     console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName) {
       await page.getByRole("combobox").click();
@@ -156,7 +158,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to display access tokens page`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName =  process.env.WORKSPACE_NAME;
+    const workspaceName = process.env.WORKSPACE_NAME;
     console.log("WORKSPACE NAME : " + workspaceName);
     //const workspaceName = process.env.WORKSPACE_NAME;
     if (subscriptionName && workspaceName) {
@@ -175,7 +177,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to create new access token`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName =  process.env.WORKSPACE_NAME;
+    const workspaceName = process.env.WORKSPACE_NAME;
     console.log("WORKSPACE NAME : " + workspaceName);
     //const workspaceName = process.env.WORKSPACE_NAME;
     if (subscriptionName && workspaceName) {
@@ -210,7 +212,7 @@ test.describe("Sanity", () => {
     const expiryAt = validity.toISOString();
     const expiryDay = getDateFromIsoString(expiryAt);
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName =  process.env.WORKSPACE_NAME;
+    const workspaceName = process.env.WORKSPACE_NAME;
     console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
@@ -242,7 +244,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to disable regional affinity`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName =  process.env.WORKSPACE_NAME;
+    const workspaceName = process.env.WORKSPACE_NAME;
     console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
@@ -275,7 +277,7 @@ test.describe("Sanity", () => {
 
   test(`Should be able to enable regional affinity`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName =  process.env.WORKSPACE_NAME;
+    const workspaceName = process.env.WORKSPACE_NAME;
     console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
@@ -312,7 +314,7 @@ test.describe("Sanity", () => {
     page,
   }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName =  process.env.WORKSPACE_NAME;
+    const workspaceName = process.env.WORKSPACE_NAME;
     console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
@@ -337,9 +339,9 @@ test.describe("Sanity", () => {
         page2.getByText(`${en.MY_ACCESS}`, { exact: true })
       ).toBeVisible();
     }
-  });  
+  });
   test(`Should be able to logout successfully`, async ({ page }) => {
-    const user_name = process.env.USER_NAME;     
+    const user_name = process.env.USER_NAME;
     if (user_name) {
       await page.getByRole("img", { name: user_name }).click();
       await page.getByRole("menuitem", { name: `${en.SIGN_OUT}` }).click();

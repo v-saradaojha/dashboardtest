@@ -4,7 +4,6 @@ import { en } from "../helpers/userLiterals";
 import { getDateFromIsoString } from "../helpers/utils";
 dotenv.config();
 
-
 let subscriptionName = process.env.SUBSCRIPTION_NAME;
 if (process.env.CROSS_REGION == "true") {
   let regions = process.env.SUPPORTED_REGIONS?.split(",")
@@ -15,7 +14,7 @@ if (process.env.CROSS_REGION == "true") {
         id: region.replace(/\s/g, "").toLocaleLowerCase(),
       };
     });
- 
+  let myWorkspaceName: string;
   test.describe("Sanity Cross Region", () => {
     test.beforeEach(async ({ page }) => {
       const user_name = process.env.USER_NAME;
@@ -55,25 +54,28 @@ if (process.env.CROSS_REGION == "true") {
           page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`)
         ).toBeVisible();
       }
-    });    
+      myWorkspaceName = myWorkspaceName;
+    });
     regions?.forEach(async (region) => {
       test(`Should be able to create new workspace in region ${region.id}`, async ({
         page,
       }) => {
         let workspaceName =
-        process.env.WORKSPACE_NAME_PREFIX !== undefined
-          ? process.env.WORKSPACE_NAME_PREFIX
-          : "dummy";
+          process.env.WORKSPACE_NAME_PREFIX !== undefined
+            ? process.env.WORKSPACE_NAME_PREFIX
+            : "dummy";
         let browser = page.context().browser()?.browserType().name();
         let environment = process.env.ENVIRONMENT || "";
         let rndInt = Math.floor(Math.random() * 10000) + 1;
         workspaceName =
           workspaceName + browser + environment + region.id + rndInt;
-          globalThis.myWorkspaceName= workspaceName;
-          console.log("WORKSPACE NAME : " + workspaceName);
+        myWorkspaceName = workspaceName;
+        console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName) {
           await page.getByRole("combobox").click();
-          await expect(page.getByRole("option")).toContainText([subscriptionName]);
+          await expect(page.getByRole("option")).toContainText([
+            subscriptionName,
+          ]);
           await page
             .getByRole("option", { name: subscriptionName })
             .getByText(subscriptionName)
@@ -81,7 +83,7 @@ if (process.env.CROSS_REGION == "true") {
           await page
             .getByRole("button", { name: `${en.NEW_WORKSPACE}` })
             .click();
-          await page.getByText('Region*').click();
+          await page.getByText("Region*").click();
           await page
             .getByRole("option", { name: region.name, exact: true })
             .click();
@@ -105,7 +107,7 @@ if (process.env.CROSS_REGION == "true") {
       test(`Should be able to delete workspace for ${region.id}`, async ({
         page,
       }) => {
-        const workspaceName = globalThis.myWorkspaceName;
+        const workspaceName = myWorkspaceName;
         console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName) {
           await page.getByRole("combobox").click();
@@ -124,13 +126,13 @@ if (process.env.CROSS_REGION == "true") {
           await page.locator("#finalDeleteWsButton").click();
           await expect(
             page.getByText(`${en.WORKSPACE_DELETING_MESSAGE}`)
-          ).toBeVisible();          
+          ).toBeVisible();
         }
-      });    
+      });
       test(`Should be able to display access tokens page for ${region.id}`, async ({
         page,
       }) => {
-        const workspaceName =  process.env.WORKSPACE_NAME;
+        const workspaceName = process.env.WORKSPACE_NAME;
         console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName && workspaceName) {
           await page.getByRole("combobox").click();
@@ -149,7 +151,7 @@ if (process.env.CROSS_REGION == "true") {
       test(`Should be able to create new access token for  ${region.id}`, async ({
         page,
       }) => {
-        const workspaceName =  process.env.WORKSPACE_NAME;
+        const workspaceName = process.env.WORKSPACE_NAME;
         console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName && workspaceName) {
           await page.getByRole("combobox").click();
@@ -187,7 +189,7 @@ if (process.env.CROSS_REGION == "true") {
         const expiryAt = validity.toISOString();
         const expiryDay = getDateFromIsoString(expiryAt);
         const subscriptionName = process.env.SUBSCRIPTION_NAME;
-        const workspaceName =  process.env.WORKSPACE_NAME;
+        const workspaceName = process.env.WORKSPACE_NAME;
         console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName && workspaceName) {
           await page.getByRole("combobox").click();
@@ -218,7 +220,6 @@ if (process.env.CROSS_REGION == "true") {
             .click();
         }
       });
-
     });
   });
 }
