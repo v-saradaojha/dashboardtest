@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import * as dotenv from "dotenv";
 import { en } from "../helpers/userLiterals";
 import { getDateFromIsoString } from "../helpers/utils";
+import JsonHelper from "../helpers/jsonHelper";
 dotenv.config();
 
 let subscriptionName = process.env.SUBSCRIPTION_NAME;
@@ -14,7 +15,7 @@ if (process.env.CROSS_REGION == "true") {
         id: region.replace(/\s/g, "").toLocaleLowerCase(),
       };
     });
-  let myWorkspaceName: string;
+  
   test.describe("Sanity Cross Region", () => {
     test.beforeEach(async ({ page }) => {
       const user_name = process.env.USER_NAME;
@@ -53,8 +54,7 @@ if (process.env.CROSS_REGION == "true") {
         await expect(
           page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`)
         ).toBeVisible();
-      }
-      myWorkspaceName = myWorkspaceName;
+      }     
     });
     regions?.forEach(async (region) => {
       test(`Should be able to create new workspace in region ${region.id}`, async ({
@@ -69,7 +69,7 @@ if (process.env.CROSS_REGION == "true") {
         let rndInt = Math.floor(Math.random() * 10000) + 1;
         workspaceName =
           workspaceName + browser + environment + region.id + rndInt;
-        myWorkspaceName = workspaceName;
+          JsonHelper.writeJsonData(workspaceName);
         console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName) {
           await page.getByRole("combobox").click();
@@ -107,7 +107,7 @@ if (process.env.CROSS_REGION == "true") {
       test(`Should be able to delete workspace for ${region.id}`, async ({
         page,
       }) => {
-        const workspaceName = myWorkspaceName;
+        const workspaceName = JsonHelper.readJsonData();;
         console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName) {
           await page.getByRole("combobox").click();

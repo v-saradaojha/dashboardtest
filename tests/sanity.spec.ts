@@ -3,15 +3,18 @@ import * as dotenv from "dotenv";
 import { en } from "../helpers/userLiterals";
 import { URLConstants } from "../helpers/urls";
 import { getDateFromIsoString } from "../helpers/utils";
+import JsonHelper from "../helpers/jsonHelper";
 
 dotenv.config();
 var regionObj = {
   name: process.env.PRIMARY_REGION,
   id: process.env.PRIMARY_REGION?.replace(/\s/g, "").toLocaleLowerCase(),
 };
-let myWorkspaceName:string;
+
+let myWorkspaceName;
 test.describe("Sanity", () => {
   test.beforeEach(async ({ page }) => {
+    myWorkspaceName = myWorkspaceName;
     const user_name = process.env.USER_NAME;
     const directory_name = process.env.DIRECTORY_NAME;
     await page.goto(`${process.env.BASE_ADDRESS}`);
@@ -51,8 +54,8 @@ test.describe("Sanity", () => {
         page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`)
       ).toBeVisible();
     }
-    myWorkspaceName = myWorkspaceName;
   });
+
   test(`Should be able to access global menu after login`, async ({ page }) => {
     await page.locator("#global-menu-toggle").click();
     const page3Promise = page.waitForEvent("popup");
@@ -95,7 +98,7 @@ test.describe("Sanity", () => {
     }
   });
 
-  test(`Should be able to create new workspace`, async ({ page, context }) => {
+  test(`Should be able to create new workspace`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
     let workspaceName =
       process.env.WORKSPACE_NAME_PREFIX !== undefined
@@ -105,7 +108,7 @@ test.describe("Sanity", () => {
     var environment = process.env.ENVIRONMENT || "";
     let rndInt = Math.floor(Math.random() * 10000) + 1;
     workspaceName = workspaceName + browser + environment + rndInt;
-    myWorkspaceName = workspaceName;
+    JsonHelper.writeJsonData(workspaceName);
     console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName) {
       await page.getByRole("combobox").click();
@@ -133,7 +136,7 @@ test.describe("Sanity", () => {
   });
   test(`Should be able to delete workspace`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
-    const workspaceName = myWorkspaceName;
+    let workspaceName = JsonHelper.readJsonData();
     console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName) {
       await page.getByRole("combobox").click();
