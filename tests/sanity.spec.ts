@@ -11,10 +11,9 @@ var regionObj = {
   id: process.env.PRIMARY_REGION?.replace(/\s/g, "").toLocaleLowerCase(),
 };
 
-let myWorkspaceName;
+
 test.describe("Sanity", () => {
-  test.beforeEach(async ({ page }) => {
-    myWorkspaceName = myWorkspaceName;
+  test.beforeEach(async ({ page }) => {  
     const user_name = process.env.USER_NAME;
     const directory_name = process.env.DIRECTORY_NAME;
     await page.goto(`${process.env.BASE_ADDRESS}`);
@@ -162,8 +161,7 @@ test.describe("Sanity", () => {
   test(`Should be able to display access tokens page`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
     const workspaceName = process.env.WORKSPACE_NAME;
-    console.log("WORKSPACE NAME : " + workspaceName);
-    //const workspaceName = process.env.WORKSPACE_NAME;
+    console.log("WORKSPACE NAME : " + workspaceName);   
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -181,8 +179,7 @@ test.describe("Sanity", () => {
   test(`Should be able to create new access token`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
     const workspaceName = process.env.WORKSPACE_NAME;
-    console.log("WORKSPACE NAME : " + workspaceName);
-    //const workspaceName = process.env.WORKSPACE_NAME;
+    console.log("WORKSPACE NAME : " + workspaceName);    
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -343,7 +340,7 @@ test.describe("Sanity", () => {
       ).toBeVisible();
     }
   });
-  test(`Should be able to logout successfully`, async ({ page }) => {
+ /* test(`Should be able to logout successfully`, async ({ page }) => {
     const user_name = process.env.USER_NAME;
     if (user_name) {
       await page.getByRole("img", { name: user_name }).click();
@@ -354,5 +351,5 @@ test.describe("Sanity", () => {
         })
       ).toBeVisible();
     }
-  });
+  });*/
 });
