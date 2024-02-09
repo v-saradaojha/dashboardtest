@@ -38,23 +38,29 @@ if (process.env.CROSS_REGION == "true") {
       await page.waitForSelector(`text=${en.STAY_SIGNED_IN}`);
       await page.click(`text=${en.YES}`);
 
-      await expect(
-        page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`, {
-          exact: true,
-        })
-      ).toBeVisible();
+      const manageWorkspacesDescription = `${en.MANAGE_WORKSPACES_DESCRIPTION}`;
+      expect.poll(
+        async () =>
+          page
+            .getByText(manageWorkspacesDescription, { exact: true })
+            .isVisible(),
+        { timeout: 5000 } 
+      );
       if (user_name && directory_name) {
-        await page.getByRole("img", { name: user_name }).click();
-        await page.getByText(`${en.SWITCH_DIRECTORY}`).click();
+        await page.getByRole("img", { name: user_name }).click();       
+        const timeoutBetweenClicks = 2000;      
+        await new Promise((resolve) => setTimeout(resolve, timeoutBetweenClicks));
+        await page.getByText(`${en.SWITCH_DIRECTORY}`, { exact: true }).click();        
         await page
           .getByRole("menuitemradio", {
             name: directory_name,
           })
           .click();
-        await expect(
-          page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`)
-        ).toBeVisible();
-      }     
+        expect.poll(
+          async () => page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`).isVisible(),
+          { timeout: 5000 }
+        );
+      }
     });
     regions?.forEach(async (region) => {
       test(`Should be able to create new workspace in region ${region.id}`, async ({

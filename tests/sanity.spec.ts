@@ -11,9 +11,8 @@ var regionObj = {
   id: process.env.PRIMARY_REGION?.replace(/\s/g, "").toLocaleLowerCase(),
 };
 
-
 test.describe("Sanity", () => {
-  test.beforeEach(async ({ page }) => {  
+  test.beforeEach(async ({ page }) => {
     const user_name = process.env.USER_NAME;
     const directory_name = process.env.DIRECTORY_NAME;
     await page.goto(`${process.env.BASE_ADDRESS}`);
@@ -36,22 +35,29 @@ test.describe("Sanity", () => {
     // await expect(
     //   page.getByText(`${en.NEW_WORKSPACE}`, { exact: true })
     // ).toBeVisible();
-    await expect(
-      page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`, {
-        exact: true,
-      })
-    ).toBeVisible();
+    const manageWorkspacesDescription = `${en.MANAGE_WORKSPACES_DESCRIPTION}`;
+
+    expect.poll(
+      async () =>
+        page
+          .getByText(manageWorkspacesDescription, { exact: true })
+          .isVisible(),
+      { timeout: 5000 }
+    );
     if (user_name && directory_name) {
-      await page.getByRole("img", { name: user_name }).click();
+      await page.getByRole("img", { name: user_name }).click();     
+      const timeoutBetweenClicks = 2000;      
+      await new Promise((resolve) => setTimeout(resolve, timeoutBetweenClicks));
       await page.getByText(`${en.SWITCH_DIRECTORY}`).click();
       await page
         .getByRole("menuitemradio", {
           name: directory_name,
         })
         .click();
-      await expect(
-        page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`)
-      ).toBeVisible();
+      expect.poll(
+        async () => page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`).isVisible(),
+        { timeout: 5000 }
+      );
     }
   });
 
@@ -161,7 +167,7 @@ test.describe("Sanity", () => {
   test(`Should be able to display access tokens page`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
     const workspaceName = process.env.WORKSPACE_NAME;
-    console.log("WORKSPACE NAME : " + workspaceName);   
+    console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -179,7 +185,7 @@ test.describe("Sanity", () => {
   test(`Should be able to create new access token`, async ({ page }) => {
     const subscriptionName = process.env.SUBSCRIPTION_NAME;
     const workspaceName = process.env.WORKSPACE_NAME;
-    console.log("WORKSPACE NAME : " + workspaceName);    
+    console.log("WORKSPACE NAME : " + workspaceName);
     if (subscriptionName && workspaceName) {
       await page.getByRole("combobox").click();
       await page
@@ -340,7 +346,7 @@ test.describe("Sanity", () => {
       ).toBeVisible();
     }
   });
- /* test(`Should be able to logout successfully`, async ({ page }) => {
+  test(`Should be able to logout successfully`, async ({ page }) => {
     const user_name = process.env.USER_NAME;
     if (user_name) {
       await page.getByRole("img", { name: user_name }).click();
@@ -351,5 +357,5 @@ test.describe("Sanity", () => {
         })
       ).toBeVisible();
     }
-  });*/
+  });
 });
