@@ -5,7 +5,9 @@ import { getDateFromIsoString } from "../helpers/utils";
 import JsonHelper from "../helpers/jsonHelper";
 dotenv.config();
 
-let subscriptionName = process.env.SUBSCRIPTION_NAME;
+const subscriptionName = process.env.SUBSCRIPTION_NAME;
+const user_name = process.env.USER_NAME;
+const directory_name = process.env.DIRECTORY_NAME;
 if (process.env.CROSS_REGION == "true") {
   let regions = process.env.SUPPORTED_REGIONS?.split(",")
     ?.filter((region) => region != process.env.PRIMARY_REGION)
@@ -15,11 +17,9 @@ if (process.env.CROSS_REGION == "true") {
         id: region.replace(/\s/g, "").toLocaleLowerCase(),
       };
     });
-  
+
   test.describe("Sanity Cross Region", () => {
     test.beforeEach(async ({ page }) => {
-      const user_name = process.env.USER_NAME;
-      const directory_name = process.env.DIRECTORY_NAME;
       await page.goto(`${process.env.BASE_ADDRESS}`);
       await page.click(`button:has-text("${en.SIGN_IN}")`);
       let username = "";
@@ -38,28 +38,22 @@ if (process.env.CROSS_REGION == "true") {
       await page.waitForSelector(`text=${en.STAY_SIGNED_IN}`);
       await page.click(`text=${en.YES}`);
 
-      const manageWorkspacesDescription = `${en.MANAGE_WORKSPACES_DESCRIPTION}`;
-      expect.poll(
-        async () =>
-          page
-            .getByText(manageWorkspacesDescription, { exact: true })
-            .isVisible(),
-        { timeout: 5000 } 
-      );
+      await expect(
+        page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`, {
+          exact: true,
+        })
+      ).toBeVisible();
       if (user_name && directory_name) {
-        await page.getByRole("img", { name: user_name }).click();       
-        const timeoutBetweenClicks = 2000;      
-        await new Promise((resolve) => setTimeout(resolve, timeoutBetweenClicks));
-        await page.getByText(`${en.SWITCH_DIRECTORY}`, { exact: true }).click();        
+        await page.getByRole("img", { name: user_name, exact: true }).click();
+        await page.getByText(`${en.SWITCH_DIRECTORY}`).click();
         await page
           .getByRole("menuitemradio", {
             name: directory_name,
           })
           .click();
-        expect.poll(
-          async () => page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`).isVisible(),
-          { timeout: 5000 }
-        );
+        await expect(
+          page.getByText(`${en.MANAGE_WORKSPACES_DESCRIPTION}`)
+        ).toBeVisible();
       }
     });
     regions?.forEach(async (region) => {
@@ -75,7 +69,7 @@ if (process.env.CROSS_REGION == "true") {
         let rndInt = Math.floor(Math.random() * 10000) + 1;
         workspaceName =
           workspaceName + browser + environment + region.id + rndInt;
-          JsonHelper.writeJsonData(workspaceName);
+        JsonHelper.writeJsonData(workspaceName);
         console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName) {
           await page.getByRole("combobox").click();
@@ -110,35 +104,10 @@ if (process.env.CROSS_REGION == "true") {
           await expect(page.getByText(`${en.REGION_INFO}`)).not.toBeVisible();
         }
       });
-      test(`Should be able to delete workspace for ${region.id}`, async ({
-        page,
-      }) => {
-        const workspaceName = JsonHelper.readJsonData();;
-        console.log("WORKSPACE NAME : " + workspaceName);
-        if (subscriptionName) {
-          await page.getByRole("combobox").click();
-          await page
-            .getByRole("option", { name: subscriptionName })
-            .getByText(subscriptionName)
-            .click();
-          await page.locator(`#${workspaceName}`).click();
-          await page
-            .getByRole("menuitem", { name: `${en.DELETE_WORKSPACE}` })
-            .getByText(`${en.DELETE_WORKSPACE}`)
-            .click();
-          await page
-            .getByRole("button", { name: `${en.DELETE}`, exact: true })
-            .click();
-          await page.locator("#finalDeleteWsButton").click();
-          await expect(
-            page.getByText(`${en.WORKSPACE_DELETING_MESSAGE}`)
-          ).toBeVisible();
-        }
-      });
       test(`Should be able to display access tokens page for ${region.id}`, async ({
         page,
       }) => {
-        const workspaceName = process.env.WORKSPACE_NAME;
+        const workspaceName = JsonHelper.readJsonData();
         console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName && workspaceName) {
           await page.getByRole("combobox").click();
@@ -157,7 +126,7 @@ if (process.env.CROSS_REGION == "true") {
       test(`Should be able to create new access token for  ${region.id}`, async ({
         page,
       }) => {
-        const workspaceName = process.env.WORKSPACE_NAME;
+        const workspaceName = JsonHelper.readJsonData();
         console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName && workspaceName) {
           await page.getByRole("combobox").click();
@@ -194,8 +163,7 @@ if (process.env.CROSS_REGION == "true") {
         validity.setDate(validity.getDate() + 7);
         const expiryAt = validity.toISOString();
         const expiryDay = getDateFromIsoString(expiryAt);
-        const subscriptionName = process.env.SUBSCRIPTION_NAME;
-        const workspaceName = process.env.WORKSPACE_NAME;
+        const workspaceName = JsonHelper.readJsonData();
         console.log("WORKSPACE NAME : " + workspaceName);
         if (subscriptionName && workspaceName) {
           await page.getByRole("combobox").click();
@@ -209,8 +177,11 @@ if (process.env.CROSS_REGION == "true") {
             page.getByText(`${en.ACCESS_TOKENS_PAGE_DESCRIPTION}`)
           ).toBeVisible();
           await page
-            .getByRole("row", { name: `test ACTIVE ${expiryDay} Delete` })
-            .getByRole("button", { name: "Delete" })
+            .getByRole("row", {
+              name: `test ACTIVE ${expiryDay} Delete`,
+              exact: true,
+            })
+            .getByRole("button", { name: "Delete", exact: true })
             .click();
           await page
             .getByRole("group")
@@ -224,6 +195,31 @@ if (process.env.CROSS_REGION == "true") {
           await page
             .getByRole("button", { name: `${en.OK}`, exact: true })
             .click();
+        }
+      });
+      test(`Should be able to delete workspace for ${region.id}`, async ({
+        page,
+      }) => {
+        const workspaceName = JsonHelper.readJsonData();
+        console.log("WORKSPACE NAME : " + workspaceName);
+        if (subscriptionName) {
+          await page.getByRole("combobox").click();
+          await page
+            .getByRole("option", { name: subscriptionName })
+            .getByText(subscriptionName)
+            .click();
+          await page.locator(`#${workspaceName}`).click();
+          await page
+            .getByRole("menuitem", { name: `${en.DELETE_WORKSPACE}` })
+            .getByText(`${en.DELETE_WORKSPACE}`)
+            .click();
+          await page
+            .getByRole("button", { name: `${en.DELETE}`, exact: true })
+            .click();
+          await page.locator("#finalDeleteWsButton").click();
+          await expect(
+            page.getByText(`${en.WORKSPACE_DELETING_MESSAGE}`)
+          ).toBeVisible();
         }
       });
     });
